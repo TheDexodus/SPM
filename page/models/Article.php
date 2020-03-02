@@ -2,6 +2,8 @@
 
 namespace app\modules\page\models;
 
+use yii\base\InvalidConfigException;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
@@ -34,7 +36,7 @@ class Article extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'article';
     }
@@ -42,7 +44,7 @@ class Article extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['title', 'slug', 'author', 'status', 'rating', 'link'], 'required'], // TODO : Maybe category
@@ -57,7 +59,11 @@ class Article extends ActiveRecord
         ];
     }
 
-    public function getTags()
+    /**
+     * @return ActiveQuery
+     * @throws InvalidConfigException
+     */
+    public function getTags(): ActiveQuery
     {
         return $this
             ->hasMany(Tag::class, ['id' => 'tag_id'])
@@ -65,16 +71,25 @@ class Article extends ActiveRecord
             ;
     }
 
-    public function getVotes()
+    /**
+     * @return ActiveQuery
+     */
+    public function getVotes(): ActiveQuery
     {
         return $this->hasMany(Vote::class, ['article_id' => 'id']);
     }
 
-    public function getCategory()
+    /**
+     * @return ActiveQuery
+     */
+    public function getCategory(): ActiveQuery
     {
         return $this->hasOne(Category::class, ['id' => 'category_id']);
     }
 
+    /**
+     * @return void
+     */
     public function calculateRating(): void
     {
         $sum = 0;
@@ -87,6 +102,9 @@ class Article extends ActiveRecord
         $this->rating = round($sum / count($this->votes));
     }
 
+    /**
+     * @return array
+     */
     public function getStatusList(): array
     {
         $list = [];
@@ -98,6 +116,10 @@ class Article extends ActiveRecord
         return $list;
     }
 
+    /**
+     * @param $attribute
+     * @param $params
+     */
     public function validateCategory($attribute, $params): void
     {
         if (!$this->hasErrors() && !Category::findOne(['id' => $this->category_id]) instanceof Category) {
@@ -105,6 +127,10 @@ class Article extends ActiveRecord
         }
     }
 
+    /**
+     * @param $attribute
+     * @param $params
+     */
     public function validateSlug($attribute, $params): void
     {
         if (!$this->hasErrors() && preg_match_all('/^[a-zA-Z0-9-]+$/', $this->slug) == 0) {
@@ -112,6 +138,10 @@ class Article extends ActiveRecord
         }
     }
 
+    /**
+     * @param $attribute
+     * @param $params
+     */
     public function validateStatus($attribute, $params): void
     {
         if (!$this->hasErrors() && !in_array($this->status, self::LIST_STATUS)) {
@@ -119,6 +149,11 @@ class Article extends ActiveRecord
         }
     }
 
+    /**
+     * @param $tagIds
+     *
+     * @return bool
+     */
     public function validateTagsByIds($tagIds): bool
     {
         foreach ($tagIds as $tagId) { // TODO : Bad method test isExistTag, need find most best
@@ -130,6 +165,9 @@ class Article extends ActiveRecord
         return true;
     }
 
+    /**
+     * @param $tags
+     */
     public function setTagsByIds($tags)
     {
         $this->unlinkAll('tags', true);
@@ -139,7 +177,13 @@ class Article extends ActiveRecord
         }
     }
 
-    public function hasStatus(string $status, $link = null)
+    /**
+     * @param string $status
+     * @param null   $link
+     *
+     * @return bool
+     */
+    public function hasStatus(string $status, $link = null): bool
     {
         return
             $status === $this->status

@@ -12,10 +12,13 @@ class m200219_164844_create_article_tag_table extends Migration
      */
     public function safeUp()
     {
-        $this->createTable('article_tag', [
-            'article_id' => $this->integer(),
-            'tag_id' => $this->integer(),
-        ]);
+        $this->createTable(
+            'article_tag',
+            [
+                'article_id' => $this->integer(),
+                'tag_id'     => $this->integer(),
+            ]
+        );
     }
 
     /**

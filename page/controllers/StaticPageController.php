@@ -6,9 +6,8 @@ use app\modules\page\models\Article;
 use app\modules\page\models\Category;
 use app\modules\page\models\Tag;
 use app\modules\page\models\Vote;
-use Symfony\Component\BrowserKit\Exception\BadMethodCallException;
 use Yii;
-use yii\base\Exception;
+use yii\base\InvalidConfigException;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -18,7 +17,6 @@ class StaticPageController extends Controller
 {
     /**
      * @param string $slug
-     *
      * @param null   $link
      *
      * @return string
@@ -29,8 +27,17 @@ class StaticPageController extends Controller
     {
         $status = Yii::$app->user->isGuest ? Article::STATUS_GUEST : Yii::$app->user->identity->privilege;
 
-        if (!($article = Article::findOne(['slug' => $slug])) instanceof Article || !$article->hasStatus($status, $link)) {
-            throw new NotFoundHttpException('Static page not founded');
+        if (!($article = Article::findOne(['slug' => $slug])) instanceof Article || !$article->hasStatus(
+                $status,
+                $link
+            )) {
+            throw new NotFoundHttpException('Article not founded');
+        }
+
+        $vote = Vote::findOne(['article_id' => $article->id, 'ip_address' => Yii::$app->request->userIP]); // Bad idea for Belarus xD
+
+        if ($vote instanceof Vote) {
+            $article->rating = $vote->rating;
         }
 
         return $this->render('static-page.php', ['article' => $article]);
@@ -38,7 +45,6 @@ class StaticPageController extends Controller
 
     /**
      * @param string $slug
-     * @param null   $page
      * @param null   $link
      *
      * @return string
@@ -49,7 +55,10 @@ class StaticPageController extends Controller
     {
         $status = Yii::$app->user->isGuest ? Article::STATUS_GUEST : Yii::$app->user->identity->privilege;
 
-        if (!($category = Category::findOne(['slug' => $slug])) instanceof Category || !$category->hasStatus($status, $link)) {
+        if (!($category = Category::findOne(['slug' => $slug])) instanceof Category || !$category->hasStatus(
+                $status,
+                $link
+            )) {
             throw new NotFoundHttpException('Category not founded');
         }
 
@@ -78,6 +87,7 @@ class StaticPageController extends Controller
      * @return string
      *
      * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionShowTag(string $slug): string
     {
@@ -109,7 +119,6 @@ class StaticPageController extends Controller
     /**
      * @param int  $article_id
      * @param int  $rating
-     *
      * @param null $link
      *
      * @return string
@@ -129,8 +138,11 @@ class StaticPageController extends Controller
 
         $status = Yii::$app->user->isGuest ? Article::STATUS_GUEST : Yii::$app->user->identity->privilege;
 
-        if (!($article = Article::findOne(['id' => $article_id])) instanceof Article || !$article->hasStatus($status, $link)) {
-            throw new NotFoundHttpException('Static page not founded');
+        if (!($article = Article::findOne(['id' => $article_id])) instanceof Article || !$article->hasStatus(
+                $status,
+                $link
+            )) {
+            throw new NotFoundHttpException('Article not founded');
         }
 
         $vote = new Vote();
@@ -138,9 +150,6 @@ class StaticPageController extends Controller
         $vote->ip_address = Yii::$app->request->userIP;
         $vote->rating = $rating;
         $vote->save();
-
-        $article->calculateRating();
-        $article->save();
 
         return 'ok';
     }

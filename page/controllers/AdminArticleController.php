@@ -4,10 +4,11 @@ namespace app\modules\page\controllers;
 
 use app\modules\page\models\Category;
 use app\modules\page\models\Tag;
-use app\modules\page\models\Vote;
+use Throwable;
 use Yii;
 use app\modules\page\models\Article;
 use yii\data\ActiveDataProvider;
+use yii\db\StaleObjectException;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -24,7 +25,7 @@ class AdminArticleController extends Controller
     public function behaviors()
     {
         return [
-            'verbs' => [
+            'verbs'  => [
                 'class'   => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
@@ -34,8 +35,8 @@ class AdminArticleController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'allow' => true,
-                        'roles' => ['@'],
+                        'allow'         => true,
+                        'roles'         => ['@'],
                         'matchCallback' => function ($rule, $action) {
                             return Yii::$app->user->getIdentity(true)->username === 'admin';
                         },
@@ -97,7 +98,8 @@ class AdminArticleController extends Controller
             $model->date_create = date('Y-m-d');
             $model->date_update = $model->date_create;
 
-            $tags = Yii::$app->request->post()['Article']['tags'] === '' ? [] : Yii::$app->request->post()['Article']['tags'];
+            $tags = Yii::$app->request->post()['Article']['tags'] === '' ? []
+                : Yii::$app->request->post()['Article']['tags'];
             if (isset(Yii::$app->request->post()['Article']['category'])) {
                 $model->category_id = Yii::$app->request->post()['Article']['category'];
             }
@@ -133,19 +135,20 @@ class AdminArticleController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post())) {
-            $tags = Yii::$app->request->post()['Article']['tags'] === '' ? [] : Yii::$app->request->post()['Article']['tags'];
+            $tags = Yii::$app->request->post()['Article']['tags'] === '' ? []
+                : Yii::$app->request->post()['Article']['tags'];
             if (isset(Yii::$app->request->post()['Article']['category'])) {
                 $model->category_id = Yii::$app->request->post()['Article']['category'];
             }
             $model->date_update = date('Y-m-d');
-            $oldRating = $model->oldAttributes['rating'];
+            //$oldRating = $model->oldAttributes['rating'];
 
             if ($model->validateTagsByIds($tags) && $model->save()) {
                 $model->setTagsByIds($tags);
 
-                if ($oldRating !== $model->rating) {
+                /*if ($oldRating !== $model->rating) {
                     $model->unlinkAll('votes', true);
-                }
+                }*/
 
                 return $this->redirect(['view', 'id' => $model->id]);
             }
@@ -169,6 +172,8 @@ class AdminArticleController extends Controller
      *
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
+     * @throws Throwable
+     * @throws StaleObjectException
      */
     public function actionDelete($id)
     {

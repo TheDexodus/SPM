@@ -25,7 +25,7 @@ class Category extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'category';
     }
@@ -33,7 +33,7 @@ class Category extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['status', 'slug', 'title', 'id_parent', 'link'], 'required'],
@@ -48,7 +48,7 @@ class Category extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id'        => 'ID',

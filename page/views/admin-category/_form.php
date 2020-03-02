@@ -13,18 +13,18 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+    <?=$form->field($model, 'title')->textInput(['maxlength' => true])?>
 
-    <?= $form->field($model, 'id_parent')->dropDownList($categoryList) ?>
+    <?=$form->field($model, 'id_parent')->dropDownList($categoryList)?>
 
-    <?= $form->field($model, 'slug')->textInput(['maxlength' => true]) ?>
+    <?=$form->field($model, 'slug')->textInput(['maxlength' => true])?>
 
-    <?= $form->field($model, 'status')->dropDownList($model->getStatusList()) ?>
+    <?=$form->field($model, 'status')->dropDownList($model->getStatusList())?>
 
-    <?= $form->field($model, 'link')->textInput(['value' => $model->link ?? sha1(microtime())]) ?>
+    <?=$form->field($model, 'link')->textInput(['value' => $model->link ?? sha1(microtime())])?>
 
     <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+        <?=Html::submitButton('Save', ['class' => 'btn btn-success'])?>
     </div>
 
     <?php ActiveForm::end(); ?>

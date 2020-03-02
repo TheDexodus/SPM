@@ -11,28 +11,30 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="category-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1><?=Html::encode($this->title)?></h1>
 
     <p>
-        <?= Html::a('Create Category', ['create'], ['class' => 'btn btn-success']) ?>
+        <?=Html::a('Create Category', ['create'], ['class' => 'btn btn-success'])?>
     </p>
 
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+    <?=GridView::widget(
+        [
+            'dataProvider' => $dataProvider,
+            'columns'      => [
+                ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'title',
-            'id_parent',
-            'slug',
-            'status',
+                'id',
+                'title',
+                'id_parent',
+                'slug',
+                'status',
 
-            ['class' => 'yii\grid\ActionColumn'],
+                ['class' => 'yii\grid\ActionColumn'],
 
-        ],
-    ]); ?>
+            ],
+        ]
+    );?>
 
 
 </div>

@@ -7,18 +7,21 @@ use yii\helpers\Html;
 /* @var $categories */
 /* @var $tags */
 
-$this->title = 'Create Static Page';
-$this->params['breadcrumbs'][] = ['label' => 'Static Pages', 'url' => ['index']];
+$this->title = 'Create Article';
+$this->params['breadcrumbs'][] = ['label' => 'Article', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="static-page-create">
+<div class="article-create">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1><?=Html::encode($this->title)?></h1>
 
-    <?= $this->render('_form', [
-        'model' => $model,
-        'categories' => $categories,
-        'tags' => $tags,
-    ]) ?>
+    <?=$this->render(
+        '_form',
+        [
+            'model'      => $model,
+            'categories' => $categories,
+            'tags'       => $tags,
+        ]
+    )?>
 
 </div>

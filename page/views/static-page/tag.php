@@ -30,10 +30,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 [
                     'attribute' => 'Action',
-                    'value' => function (Article $article) {
-                        return Html::a('View', Url::to(['/page/' . $article->slug]));
+                    'value'     => function (Article $article) {
+                        return Html::a('View', Url::to(['/page/'.$article->slug]));
                     },
-                    'format' => 'raw',
+                    'format'    => 'raw',
                 ],
             ],
         ]

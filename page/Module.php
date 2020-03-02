@@ -3,12 +3,14 @@
 namespace app\modules\page;
 
 use Yii;
-use yii\base\Application;
 use yii\base\BootstrapInterface;
 
 class Module extends \yii\base\Module implements BootstrapInterface
 {
-    public function init()
+    /**
+     * @return void
+     */
+    public function init(): void
     {
         parent::init();
 
@@ -18,7 +20,7 @@ class Module extends \yii\base\Module implements BootstrapInterface
     /**
      * @inheritDoc
      */
-    public function bootstrap($app)
+    public function bootstrap($app): void
     {
         $app->getUrlManager()->enablePrettyUrl = true;
         $app->getUrlManager()->showScriptName = false;

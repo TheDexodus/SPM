@@ -12,7 +12,7 @@ class RatingWidget extends Widget
     /**
      * @throws Exception
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
 
@@ -21,7 +21,10 @@ class RatingWidget extends Widget
         }
     }
 
-    public function run()
+    /**
+     * @return string
+     */
+    public function run(): string
     {
         return $this->render('/widgets/rating_widget.php', ['article' => $this->article]);
     }

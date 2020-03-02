@@ -2,6 +2,8 @@
 
 namespace app\modules\page\models;
 
+use yii\base\InvalidConfigException;
+use yii\db\ActiveQuery;
 use yii\db\ActiveRecord;
 
 /**
@@ -16,7 +18,7 @@ class Tag extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'tag';
     }
@@ -24,7 +26,7 @@ class Tag extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             [['title', 'slug'], 'string', 'max' => 255],
@@ -32,7 +34,11 @@ class Tag extends ActiveRecord
         ];
     }
 
-    public function getStaticPages()
+    /**
+     * @return ActiveQuery
+     * @throws InvalidConfigException
+     */
+    public function getStaticPages(): ActiveQuery
     {
         return $this
             ->hasMany(Article::class, ['id' => 'article_id'])
@@ -40,7 +46,13 @@ class Tag extends ActiveRecord
             ;
     }
 
-    public function getStaticPagesByStatus(string $userStatus)
+    /**
+     * @param string $userStatus
+     *
+     * @return ActiveQuery
+     * @throws InvalidConfigException
+     */
+    public function getStaticPagesByStatus(string $userStatus): ActiveQuery
     {
         return $this
             ->getStaticPages()
@@ -61,6 +73,10 @@ class Tag extends ActiveRecord
             ;
     }
 
+    /**
+     * @param $attribute
+     * @param $params
+     */
     public function validateSlug($attribute, $params): void
     {
         if (!$this->hasErrors() && preg_match_all('/^[a-zA-Z0-9-]+$/', $this->slug) == 0) {
@@ -68,11 +84,17 @@ class Tag extends ActiveRecord
         }
     }
 
-    public function __toString()
+    /**
+     * @return string
+     */
+    public function __toString(): string
     {
-        return $this->title;
+        return $this->title ?? '';
     }
 
+    /**
+     * @return array
+     */
     public static function getTitleList(): array
     {
         $list = [];
@@ -88,7 +110,7 @@ class Tag extends ActiveRecord
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function attributeLabels(): array
     {
         return [
             'id'    => 'ID',
