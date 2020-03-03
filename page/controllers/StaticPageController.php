@@ -34,11 +34,11 @@ class StaticPageController extends Controller
             throw new NotFoundHttpException('Article not founded');
         }
 
-        $vote = Vote::findOne(['article_id' => $article->id, 'ip_address' => Yii::$app->request->userIP]); // Bad idea for Belarus xD
+        /**$vote = Vote::findOne(['article_id' => $article->id, 'ip_address' => Yii::$app->request->userIP]); // Bad idea for Belarus xD
 
         if ($vote instanceof Vote) {
             $article->rating = $vote->rating;
-        }
+        }*/
 
         return $this->render('static-page.php', ['article' => $article]);
     }
@@ -150,6 +150,9 @@ class StaticPageController extends Controller
         $vote->ip_address = Yii::$app->request->userIP;
         $vote->rating = $rating;
         $vote->save();
+
+        $article->calculateRating();
+        $article->save();
 
         return 'ok';
     }

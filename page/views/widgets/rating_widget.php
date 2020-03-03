@@ -18,9 +18,21 @@ use app\modules\page\models\Article;
         width: 1.1em;
     }
 
-
-    #rating > span:hover {
+    #rating > span:hover,
+    #rating > span:hover ~ span {
         cursor: pointer;
+        color: transparent;
+    }
+    #rating > span:hover:before,
+    #rating > span:hover ~ span:before {
+        content: "\2605";
+        position: absolute;
+        left: 0;
+        color: gold;
+    }
+
+    .star-active {
+        color: gold;
     }
 </style>
 
@@ -45,39 +57,39 @@ use app\modules\page\models\Article;
 
   function setVote (rating) {
     if (rating >= 1) {
-      document.getElementById('star_1').style.color = 'gold'
+      document.getElementById('star_1').classList.add('star-active');
     } else {
-      document.getElementById('star_1').style.color = 'gray'
+      document.getElementById('star_1').classList.remove('star-active');
     }
     if (rating >= 2) {
-      document.getElementById('star_2').style.color = 'gold'
+      document.getElementById('star_2').classList.add('star-active');
     } else {
-      document.getElementById('star_2').style.color = 'gray'
+      document.getElementById('star_2').classList.remove('star-active');
     }
     if (rating >= 3) {
-      document.getElementById('star_3').style.color = 'gold'
+      document.getElementById('star_3').classList.add('star-active');
     } else {
-      document.getElementById('star_3').style.color = 'gray'
+      document.getElementById('star_3').classList.remove('star-active');
     }
     if (rating >= 4) {
-      document.getElementById('star_4').style.color = 'gold'
+      document.getElementById('star_4').classList.add('star-active');
     } else {
-      document.getElementById('star_4').style.color = 'gray'
+      document.getElementById('star_4').classList.remove('star-active');
     }
     if (rating >= 5) {
-      document.getElementById('star_5').style.color = 'gold'
+      document.getElementById('star_5').classList.add('star-active');
     } else {
-      document.getElementById('star_5').style.color = 'gray'
+      document.getElementById('star_5').classList.remove('star-active');
     }
   }
 </script>
 
 <div id="rating">
-    <span id="star_5" onclick="vote(5)" onmouseenter="setVote(5)" onmouseleave="setVote(articleRating)">☆</span>
-    <span id="star_4" onclick="vote(4)" onmouseenter="setVote(4)" onmouseleave="setVote(articleRating)">☆</span>
-    <span id="star_3" onclick="vote(3)" onmouseenter="setVote(3)" onmouseleave="setVote(articleRating)">☆</span>
-    <span id="star_2" onclick="vote(2)" onmouseenter="setVote(2)" onmouseleave="setVote(articleRating)">☆</span>
-    <span id="star_1" onclick="vote(1)" onmouseenter="setVote(1)" onmouseleave="setVote(articleRating)">☆</span>
+    <span id="star_5" onclick="vote(5)">☆</span>
+    <span id="star_4" onclick="vote(4)">☆</span>
+    <span id="star_3" onclick="vote(3)">☆</span>
+    <span id="star_2" onclick="vote(2)">☆</span>
+    <span id="star_1" onclick="vote(1)">☆</span>
 </div>
 <div style="text-align: center">
     <p id="rating-result"></p>

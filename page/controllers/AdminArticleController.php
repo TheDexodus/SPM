@@ -141,14 +141,14 @@ class AdminArticleController extends Controller
                 $model->category_id = Yii::$app->request->post()['Article']['category'];
             }
             $model->date_update = date('Y-m-d');
-            //$oldRating = $model->oldAttributes['rating'];
+            $oldRating = $model->oldAttributes['rating'];
 
             if ($model->validateTagsByIds($tags) && $model->save()) {
                 $model->setTagsByIds($tags);
 
-                /*if ($oldRating !== $model->rating) {
+                if ($oldRating !== $model->rating) {
                     $model->unlinkAll('votes', true);
-                }*/
+                }
 
                 return $this->redirect(['view', 'id' => $model->id]);
             }
